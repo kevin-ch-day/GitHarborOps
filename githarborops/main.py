@@ -34,7 +34,12 @@ def main():
         sys.exit(1)
 
     # Select a repo
-    repo_path = menu.select_repo(repos)
+    if len(repos) == 1:
+        repo_path = repos[0]
+    else:
+        repo_path = menu.select_repo(
+            repos, instruction="Use arrow keys and press Enter to select"
+        )
 
     if not repo_path:
         print("No repository selected. Exiting.")

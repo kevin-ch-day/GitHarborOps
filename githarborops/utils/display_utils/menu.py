@@ -29,6 +29,7 @@ def menu_select(
     title: str,
     choices: Iterable[ChoiceType],
     anchor_icon: str = ANCHOR_ICON,
+    instruction: Optional[str] = None,
 ) -> Optional[str]:
     """Standard menu selection prompt with GitHarborOps Harbor Navy styling."""
     return questionary.select(
@@ -36,6 +37,7 @@ def menu_select(
         choices=list(choices),
         qmark=anchor_icon,
         style=MENU_STYLE,
+        instruction=instruction,
     ).ask()
 
 
@@ -54,10 +56,14 @@ def githarborops_menu(
 
 
 def select_repo(
-    repos: Iterable[ChoiceType], anchor_icon: str = ANCHOR_ICON
+    repos: Iterable[ChoiceType],
+    anchor_icon: str = ANCHOR_ICON,
+    instruction: Optional[str] = None,
 ) -> Optional[str]:
     """Prompt the user to choose a repository from *repos*."""
-    return menu_select(f"{anchor_icon} Select repository", repos, anchor_icon)
+    return menu_select(
+        f"{anchor_icon} Select repository", repos, anchor_icon, instruction
+    )
 
 
 def select_action(
