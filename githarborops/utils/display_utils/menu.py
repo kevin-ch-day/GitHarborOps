@@ -55,23 +55,21 @@ def githarborops_menu(
     options: Iterable[ChoiceType], anchor_icon: str = ANCHOR_ICON
 ) -> Optional[str]:
     """Display the GitHarborOps main menu."""
-    return menu_select(
-        f"{anchor_icon} GitHarborOps Menu", options, anchor_icon=anchor_icon
-    )
+    return menu_select(f"{anchor_icon} GitHarborOps Menu", options, anchor_icon)
 
 
 def select_repo(
     repos: Iterable[ChoiceType], anchor_icon: str = ANCHOR_ICON
 ) -> Optional[str]:
     """Prompt the user to choose a repository from *repos*."""
-    return menu_select("Select repository", repos, anchor_icon=anchor_icon)
+    return menu_select(f"{anchor_icon} Select repository", repos, anchor_icon)
 
 
 def select_action(
     actions: Iterable[ChoiceType], anchor_icon: str = ANCHOR_ICON
 ) -> Optional[str]:
     """Prompt the user to choose an action from *actions*."""
-    return menu_select("Select action", actions, anchor_icon=anchor_icon)
+    return menu_select(f"{anchor_icon} Select action", actions, anchor_icon)
 
 
 def confirm(message: str, anchor_icon: str = ANCHOR_ICON) -> bool:

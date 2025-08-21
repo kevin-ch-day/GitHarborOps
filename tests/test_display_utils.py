@@ -1,7 +1,6 @@
 import re
 
 from rich.console import Console
-from rich.style import Style
 
 from githarborops.utils.display_utils import colors, banners, menu, tables, formatter
 
@@ -15,7 +14,7 @@ def test_severity_color_mappings():
 
 
 def test_show_banner_formatting(monkeypatch):
-    """Banner should render with bold blue style."""
+    """Banner should render with bold cyan style."""
     console = Console(force_terminal=True)
     monkeypatch.setattr(banners, "console", console)
     with console.capture() as capture:
@@ -39,12 +38,15 @@ def test_menu_option_styling(monkeypatch):
             return "chosen"
 
     monkeypatch.setattr(
-        menu.questionary, "select", lambda message, choices, **kwargs: DummyQuestion(message, choices)
+        menu.questionary,
+        "select",
+        lambda message, choices, **kwargs: DummyQuestion(message, choices),
     )
 
     result = menu.select_repo(["a", "b"])
     assert result == "chosen"
-    assert captured == {"message": "Select repository", "choices": ["a", "b"]}
+    # Updated to match new anchor-prefixed style
+    assert captured == {"message": "⚓ Select repository", "choices": ["a", "b"]}
 
 
 def test_table_row_alternation(monkeypatch):
