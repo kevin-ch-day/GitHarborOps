@@ -5,7 +5,7 @@ GitHarborOps - Interactive Git management tool.
 
 import sys
 from pathlib import Path
-from githarborops.repo_finder import find_git_repos
+from githarborops.repo_finder import RepoFinderStatus, find_git_repos
 from githarborops.git_utils import run_git_command
 from githarborops.actions import (
     overview,
@@ -26,7 +26,12 @@ def main():
     base_dir = Path.home() / "Github_Repos"
 
     # Discover repos
-    repos = find_git_repos(str(base_dir))
+    result = find_git_repos(str(base_dir))
+    if isinstance(result, RepoFinderStatus):
+        sys.stderr.write(f"[X] {result.reason}: {result.base}\n")
+        sys.exit(1)
+
+    repos = result
     if not repos:
         sys.stderr.write(
             f"[X] No Git repositories found in {base_dir}. "

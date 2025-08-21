@@ -6,20 +6,12 @@ from rich.panel import Panel
 console = Console()
 
 
-BANNER_TEXT = (
-    "[bold cyan]⚓ GitHarborOps[/]\nHarbor Control for Your Git Repositories"
-)
+BANNER_TEXT = "[bold blue]GitHarborOps[/]\nHarbor Control for Your Git Repositories"
 
 
 def show_banner() -> None:
     """Display the application banner."""
-    console.print(
-        Panel(
-            BANNER_TEXT,
-            style="on #001f3f",
-            border_style="cyan",
-        )
-    )
+    console.print(Panel(BANNER_TEXT, style="bold blue", border_style="blue"))
 
 
 def section(title: str) -> None:

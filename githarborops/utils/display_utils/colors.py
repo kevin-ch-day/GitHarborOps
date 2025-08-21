@@ -7,15 +7,15 @@ HARBOR_NAVY = Style(color="#001f3f")   # Deep navy (primary identity)
 SEA_BLUE = Style(color="#17a2b8")      # Teal / details
 HARBOR_GREEN = Style(color="#21a179")  # Success
 BRIGHT_WHITE = Style(color="bright_white")
-WARNING_YELLOW = Style(color="yellow")
-DANGER_RED = Style(color="#ff4136")
+WARNING_YELLOW = Style(color="yellow", bold=True)
+DANGER_RED = Style(color="red", bold=True)
 HIGHLIGHT_CYAN = Style(color="cyan", bold=True)
 
 # Semantic / Severity Styles
 DEFAULT = BRIGHT_WHITE
-INFO = HARBOR_NAVY
+INFO = Style(color="cyan")
 DETAILS = SEA_BLUE
-SUCCESS = HARBOR_GREEN
+SUCCESS = Style(color="green", bold=True)
 WARN = WARNING_YELLOW
 ERROR = DANGER_RED
 HIGHLIGHT = HIGHLIGHT_CYAN
