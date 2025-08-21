@@ -25,38 +25,48 @@ MENU_STYLE = Style(
 ChoiceType = Union[str, Choice]
 
 
-def menu_select(title: str, choices: Iterable[ChoiceType]) -> Optional[str]:
+def menu_select(
+    title: str,
+    choices: Iterable[ChoiceType],
+    anchor_icon: str = ANCHOR_ICON,
+) -> Optional[str]:
     """Standard menu selection prompt with GitHarborOps Harbor Navy styling."""
     return questionary.select(
         title,
         choices=list(choices),
-        qmark=ANCHOR_ICON,
+        qmark=anchor_icon,
         style=MENU_STYLE,
     ).ask()
 
 
-def menu_confirm(message: str) -> bool:
+def menu_confirm(message: str, anchor_icon: str = ANCHOR_ICON) -> bool:
     """Standard confirmation prompt with GitHarborOps styling."""
     return bool(
-        questionary.confirm(message, qmark=ANCHOR_ICON, style=MENU_STYLE).ask()
+        questionary.confirm(message, qmark=anchor_icon, style=MENU_STYLE).ask()
     )
 
 
-def githarborops_menu(options: Iterable[ChoiceType]) -> Optional[str]:
+def githarborops_menu(
+    options: Iterable[ChoiceType], anchor_icon: str = ANCHOR_ICON
+) -> Optional[str]:
     """Display the GitHarborOps main menu."""
-    return menu_select(f"{ANCHOR_ICON} GitHarborOps Menu", options)
+    return menu_select(f"{anchor_icon} GitHarborOps Menu", options, anchor_icon)
 
 
-def select_repo(repos: Iterable[ChoiceType]) -> Optional[str]:
+def select_repo(
+    repos: Iterable[ChoiceType], anchor_icon: str = ANCHOR_ICON
+) -> Optional[str]:
     """Prompt the user to choose a repository from *repos*."""
-    return menu_select(f"{ANCHOR_ICON} Select repository", repos)
+    return menu_select(f"{anchor_icon} Select repository", repos, anchor_icon)
 
 
-def select_action(actions: Iterable[ChoiceType]) -> Optional[str]:
+def select_action(
+    actions: Iterable[ChoiceType], anchor_icon: str = ANCHOR_ICON
+) -> Optional[str]:
     """Prompt the user to choose an action from *actions*."""
-    return menu_select(f"{ANCHOR_ICON} Select action", actions)
+    return menu_select(f"{anchor_icon} Select action", actions, anchor_icon)
 
 
-def confirm(message: str) -> bool:
+def confirm(message: str, anchor_icon: str = ANCHOR_ICON) -> bool:
     """Yes/No confirmation prompt with Harbor Navy styling."""
-    return menu_confirm(f"{ANCHOR_ICON} {message}")
+    return menu_confirm(f"{anchor_icon} {message}", anchor_icon)
