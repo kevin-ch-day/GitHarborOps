@@ -9,6 +9,7 @@ GREEN = Style(color="green")
 YELLOW = Style(color="yellow")
 RED = Style(color="red")
 MAGENTA = Style(color="magenta")
+HARBOR_NAVY = Style(color="#001f3f")
 
 # Severity styles
 INFO = CYAN
