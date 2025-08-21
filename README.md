@@ -39,6 +39,39 @@ Run tests with:
 pytest
 ```
 
+## Theming
+
+GitHarborOps menus use a Harbor Navy theme. The foreground color can be
+customised by setting the ``GITHARBOROPS_MENU_COLOR`` environment variable.
+Invalid colors fall back to the default ``ansibrightcyan``.
+
+Example:
+
+```bash
+export GITHARBOROPS_MENU_COLOR=ansibrightgreen
+```
+
+### Supported ANSI Colors
+
+| Color Name         | Description    |
+|--------------------|----------------|
+| ansiblack          | black          |
+| ansired            | red            |
+| ansigreen          | green          |
+| ansiyellow         | yellow         |
+| ansiblue           | blue           |
+| ansimagenta        | magenta        |
+| ansicyan           | cyan           |
+| ansiwhite          | white          |
+| ansibrightblack    | bright black   |
+| ansibrightred      | bright red     |
+| ansibrightgreen    | bright green   |
+| ansibrightyellow   | bright yellow  |
+| ansibrightblue     | bright blue    |
+| ansibrightmagenta  | bright magenta |
+| ansibrightcyan     | bright cyan    |
+| ansibrightwhite    | bright white   |
+
 ## License
 
 MIT

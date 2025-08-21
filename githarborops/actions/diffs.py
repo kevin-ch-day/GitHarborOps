@@ -5,6 +5,7 @@ from rich.syntax import Syntax
 import questionary
 
 from githarborops.git_utils import run_git_command
+from githarborops.utils.display_utils import menu
 
 
 console = Console()
@@ -24,7 +25,11 @@ def show(repo_path: str) -> None:
         "main" if "main" in branches else "master" if "master" in branches else branches[0]
     )
     base_branch = questionary.select(
-        "Select base branch:", choices=branches, default=default_base
+        "Select base branch:",
+        choices=branches,
+        default=default_base,
+        qmark=menu.ANCHOR_ICON,
+        style=menu.MENU_STYLE,
     ).ask()
     if not base_branch:
         return
