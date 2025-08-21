@@ -51,4 +51,4 @@ def test_githarborops_menu_calls_select(monkeypatch):
     monkeypatch.setattr(questionary, "select", mock_select)
 
     menu.githarborops_menu(["opt"])
-    assert called["message"] == "GitHarborOps Menu"
+    assert called["message"] == f"{menu.ANCHOR_ICON} GitHarborOps Menu"
