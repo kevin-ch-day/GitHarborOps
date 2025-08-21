@@ -16,7 +16,7 @@ def test_severity_color_mappings():
 
 
 def test_show_banner_formatting(monkeypatch):
-    """Banner should render with bold cyan style."""
+    """Banner should render with bold bright cyan style."""
     console = Console(force_terminal=True)
     monkeypatch.setattr(banners, "console", console)
     with console.capture() as capture:
@@ -32,18 +32,16 @@ def test_menu_option_styling(monkeypatch):
     captured = {}
 
     class DummyQuestion:
-        def __init__(self, message, choices):
-            self.message = message
-            self.choices = choices
+        def __init__(self, message, choices, **kwargs):
+            captured["message"] = message
+            captured["choices"] = choices
+            captured["kwargs"] = kwargs
 
         def ask(self):
             return "chosen"
 
     def fake_select(message, choices, **kwargs):
-        captured["message"] = message
-        captured["choices"] = choices
-        captured["kwargs"] = kwargs
-        return DummyQuestion(message, choices)
+        return DummyQuestion(message, choices, **kwargs)
 
     monkeypatch.setattr(menu.questionary, "select", fake_select)
 
@@ -51,15 +49,17 @@ def test_menu_option_styling(monkeypatch):
     assert result == "chosen"
     assert captured["message"] == "⚓ Select repository"
     assert captured["choices"] == ["a", "b"]
+    # Verify our style/qmark were forwarded
     assert "qmark" in captured["kwargs"] and "style" in captured["kwargs"]
 
 
 @pytest.mark.parametrize(
-    "env_color, expected", [
+    "env_color, expected",
+    [
         (None, "ansibrightcyan"),
         ("ansibrightgreen", "ansibrightgreen"),
         ("notacolor", "ansibrightcyan"),
-    ]
+    ],
 )
 def test_menu_color_override(monkeypatch, env_color, expected, caplog):
     """Environment variable should control menu color with fallback on invalid input."""
@@ -67,12 +67,15 @@ def test_menu_color_override(monkeypatch, env_color, expected, caplog):
         monkeypatch.setenv("GITHARBOROPS_MENU_COLOR", env_color)
     else:
         monkeypatch.delenv("GITHARBOROPS_MENU_COLOR", raising=False)
+
     caplog.set_level("WARNING")
     importlib.reload(menu)
     rule_dict = dict(menu.MENU_STYLE._style_rules)
     assert rule_dict["qmark"].startswith(f"fg:{expected}")
     if env_color not in (None, expected):
         assert "Unsupported menu color" in caplog.text
+
+    # cleanup
     monkeypatch.delenv("GITHARBOROPS_MENU_COLOR", raising=False)
     importlib.reload(menu)
 
