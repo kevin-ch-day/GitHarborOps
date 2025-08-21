@@ -1,43 +1,70 @@
+"""Utilities for discovering Git repositories on disk."""
+
 import os
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Union, Dict
 
 
-def find_git_repos(base_dir: str | None = None) -> List[Tuple[str, str]]:
-    """
-    Recursively search for Git repositories under a base directory.
+def _scan(base: Path, exclude_dirs: set[str]) -> List[str]:
+    """Return a list of git repositories under ``base``."""
 
-    Args:
-        base_dir (str | None): Path to the directory to search. If None,
-                               will use $GITHARBOROPS_REPOS or current working dir.
-
-    Returns:
-        list[tuple[str, str]]: List of (repo_name, absolute_path) tuples.
-    """
-    # Resolve base path
-    if base_dir is None:
-        base_dir = os.environ.get("GITHARBOROPS_REPOS", Path.cwd())
-
-    base = Path(base_dir).expanduser().resolve()
-    repos: List[Tuple[str, str]] = []
-
+    repos: List[str] = []
     if not base.exists() or not base.is_dir():
-        print(f"[X] Base directory not found: {base}")
         return repos
 
-    exclude_dirs = {".venv", "venv", "__pycache__", "node_modules"}
-
-    for root, dirs, files in os.walk(base):
-        # Clean excluded dirs in-place
+    for root, dirs, _ in os.walk(base):
+        # prune excluded directories
         dirs[:] = [d for d in dirs if d not in exclude_dirs]
 
         if ".git" in dirs:
             repo_path = Path(root).resolve()
-            repo_name = repo_path.name
-            repos.append((repo_name, str(repo_path)))
-            # prevent descending further into this repo
+            repos.append(str(repo_path))
+            # do not descend further once a repo is found
             dirs[:] = []
 
-    if not repos:
-        print(f"[X] No Git repositories found in {base}")
     return repos
+
+
+def find_git_repos(base_dir: str | None = None) -> Union[List[str], Dict[str, Union[str, List[str]]]]:
+    """Search for Git repositories with a sensible default path.
+
+    If ``base_dir`` is provided, only that path is searched. When ``base_dir``
+    is ``None`` the search is attempted in two stages:
+
+    1. The directory two levels up from this file
+       (``Path(__file__).resolve().parent.parent``).
+    2. ``Path.cwd()`` if the first search yields no results.
+
+    Directories named ``venv``, ``.venv``, ``__pycache__`` and ``node_modules``
+    are excluded from traversal.
+
+    Returns either a list of repository paths or a dictionary with an
+    explanatory message when no repositories are found.
+    """
+
+    exclude_dirs = {"venv", ".venv", "__pycache__", "node_modules"}
+
+    def _try(path: Path) -> List[str]:
+        return _scan(path, exclude_dirs)
+
+    if base_dir is not None:
+        base_path = Path(base_dir).expanduser().resolve()
+        repos = _try(base_path)
+        if repos:
+            return repos
+        return {"repos": [], "message": f"No Git repositories found in {base_path}"}
+
+    default_base = Path(__file__).resolve().parent.parent
+    repos = _try(default_base)
+    if repos:
+        return repos
+
+    cwd_base = Path.cwd().resolve()
+    repos = _try(cwd_base)
+    if repos:
+        return repos
+
+    return {
+        "repos": [],
+        "message": f"No Git repositories found in {default_base} or {cwd_base}",
+    }
