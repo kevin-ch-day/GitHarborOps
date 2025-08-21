@@ -43,6 +43,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "questionary>=2.0",
+        "rich>=13.0",
     ],
     entry_points={
         "console_scripts": [

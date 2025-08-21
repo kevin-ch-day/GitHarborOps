@@ -9,7 +9,15 @@ import questionary
 
 from githarborops.repo_finder import find_git_repos
 from githarborops.git_utils import run_git_command
-from githarborops.actions import overview, status, branches, diffs, logs, conflicts
+from githarborops.actions import (
+    overview,
+    status,
+    branches,
+    diffs,
+    logs,
+    conflicts,
+    stashes,
+)
 
 
 def main():
@@ -80,10 +88,10 @@ def main():
             logs.show(repo_path)
 
         elif choice.startswith("8"):
-            print(run_git_command(repo_path, ["show", "--stat", "-1"]).stdout)
+            logs.last_commit(repo_path)
 
         elif choice.startswith("9"):
-            print(run_git_command(repo_path, ["stash", "list"]).stdout)
+            stashes.show(repo_path)
 
         else:
             print("Bye 👋")
