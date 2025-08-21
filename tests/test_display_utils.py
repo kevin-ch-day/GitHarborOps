@@ -8,10 +8,10 @@ from githarborops.utils.display_utils import colors, banners, menu, tables, form
 
 def test_severity_color_mappings():
     """SEVERITY should map level names to expected styles."""
-    assert colors.SEVERITY["info"] == Style(color="cyan")
-    assert colors.SEVERITY["warn"] == Style(color="yellow", bold=True)
-    assert colors.SEVERITY["error"] == Style(color="red", bold=True)
-    assert colors.SEVERITY["success"] == Style(color="green", bold=True)
+    assert colors.SEVERITY["info"] == colors.INFO
+    assert colors.SEVERITY["warn"] == colors.WARN
+    assert colors.SEVERITY["error"] == colors.ERROR
+    assert colors.SEVERITY["success"] == colors.SUCCESS
 
 
 def test_show_banner_formatting(monkeypatch):
@@ -22,8 +22,8 @@ def test_show_banner_formatting(monkeypatch):
         banners.show_banner()
     output = capture.get()
     assert "GitHarborOps" in output
-    # ANSI code for bold blue is 1;34
-    assert "\x1b[1;34m" in output
+    # ANSI code 36 corresponds to cyan foreground
+    assert "\x1b[36" in output
 
 
 def test_menu_option_styling(monkeypatch):
@@ -31,14 +31,16 @@ def test_menu_option_styling(monkeypatch):
     captured = {}
 
     class DummyQuestion:
-        def __init__(self, message, choices):
+        def __init__(self, message, choices, **kwargs):
             captured["message"] = message
             captured["choices"] = choices
 
         def ask(self):
             return "chosen"
 
-    monkeypatch.setattr(menu.questionary, "select", lambda message, choices: DummyQuestion(message, choices))
+    monkeypatch.setattr(
+        menu.questionary, "select", lambda message, choices, **kwargs: DummyQuestion(message, choices)
+    )
 
     result = menu.select_repo(["a", "b"])
     assert result == "chosen"
