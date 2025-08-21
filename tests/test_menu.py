@@ -24,6 +24,7 @@ def test_menu_select_uses_anchor_and_style(monkeypatch):
     assert menu.menu_select("Title", ["a"]) == "choice"
     assert captured["kwargs"]["qmark"] == menu.ANCHOR_ICON
     assert captured["kwargs"]["style"] is menu.MENU_STYLE
+    assert captured["kwargs"]["instruction"] == menu.DEFAULT_INSTRUCTION
 
 
 def test_menu_confirm_uses_anchor_and_style(monkeypatch):
@@ -51,4 +52,4 @@ def test_githarborops_menu_calls_select(monkeypatch):
     monkeypatch.setattr(questionary, "select", mock_select)
 
     menu.githarborops_menu(["opt"])
-    assert called["message"] == f"{menu.ANCHOR_ICON} GitHarborOps Menu"
+    assert called["message"] == "GitHarborOps Menu"

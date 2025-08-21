@@ -1,7 +1,6 @@
 import re
 
 from rich.console import Console
-from rich.style import Style
 
 from githarborops.utils.display_utils import colors, banners, menu, tables, formatter
 
@@ -15,14 +14,14 @@ def test_severity_color_mappings():
 
 
 def test_show_banner_formatting(monkeypatch):
-    """Banner should render with bold blue style."""
+    """Banner should render with bold cyan style."""
     console = Console(force_terminal=True)
     monkeypatch.setattr(banners, "console", console)
     with console.capture() as capture:
         banners.show_banner()
     output = capture.get()
     assert "GitHarborOps" in output
-    # ANSI code for cyan foreground should be present
+    # ANSI code 36 corresponds to cyan foreground
     assert "\x1b[36" in output
 
 
@@ -31,7 +30,7 @@ def test_menu_option_styling(monkeypatch):
     captured = {}
 
     class DummyQuestion:
-        def __init__(self, message, choices):
+        def __init__(self, message, choices, **kwargs):
             captured["message"] = message
             captured["choices"] = choices
 
@@ -46,6 +45,7 @@ def test_menu_option_styling(monkeypatch):
 
     result = menu.select_repo(["a", "b"])
     assert result == "chosen"
+    # Updated to match new anchor-prefixed style
     assert captured == {"message": "⚓ Select repository", "choices": ["a", "b"]}
 
 
