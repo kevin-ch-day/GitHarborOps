@@ -5,8 +5,6 @@ GitHarborOps - Interactive Git management tool.
 
 import sys
 from pathlib import Path
-import questionary
-
 from githarborops.repo_finder import find_git_repos
 from githarborops.git_utils import run_git_command
 from githarborops.actions import (
@@ -18,6 +16,7 @@ from githarborops.actions import (
     conflicts,
     stashes,
 )
+from githarborops.utils.display_utils import menu
 
 
 def main():
@@ -36,10 +35,7 @@ def main():
         sys.exit(1)
 
     # Select a repo
-    repo_path = questionary.select(
-        "Select a Git repository:",
-        choices=repos,
-    ).ask()
+    repo_path = menu.select_repo(repos)
 
     if not repo_path:
         print("No repository selected. Exiting.")
@@ -47,9 +43,9 @@ def main():
 
     # Main interactive loop
     while True:
-        choice = questionary.select(
-            f"⚓ GitHarborOps - {repo_path}",
-            choices=[
+        choice = menu.select_action(
+            f"GitHarborOps - {repo_path}",
+            [
                 "1) Repo overview",
                 "2) Status & changed files",
                 "3) Branches",
@@ -61,7 +57,7 @@ def main():
                 "9) Stashes",
                 "Quit",
             ],
-        ).ask()
+        )
 
         if not choice:
             break
