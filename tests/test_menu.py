@@ -24,6 +24,7 @@ def test_menu_select_uses_anchor_and_style(monkeypatch):
     assert menu.menu_select("Title", ["a"]) == "choice"
     assert captured["kwargs"]["qmark"] == menu.ANCHOR_ICON
     assert captured["kwargs"]["style"] is menu.MENU_STYLE
+    assert captured["kwargs"]["instruction"] == menu.DEFAULT_INSTRUCTION
 
 
 def test_menu_confirm_uses_anchor_and_style(monkeypatch):
