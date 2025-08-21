@@ -1,0 +1,2 @@
+[console_scripts]
+githarborops = githarborops.main:main
