@@ -3,6 +3,7 @@
 GitHarborOps - Interactive Git management tool.
 """
 
+import os
 import sys
 from pathlib import Path
 from githarborops.repo_finder import find_git_repos
@@ -22,12 +23,10 @@ from githarborops.utils.display_utils import menu
 def main():
     """Entry point for GitHarborOps CLI."""
 
-    # Base directory where repos are stored (default: ~/Github_Repos)
-    base_dir = Path.home() / "Github_Repos"
-
-    # Discover repos
-    repos = find_git_repos(str(base_dir))
+    # Discover repos from derived search root
+    repos = find_git_repos()
     if not repos:
+        base_dir = Path(os.environ.get("GITHARBOROPS_REPOS", Path.cwd())).expanduser().resolve()
         sys.stderr.write(
             f"[X] No Git repositories found in {base_dir}. "
             "Add some projects first.\n"
